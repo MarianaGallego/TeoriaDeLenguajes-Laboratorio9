@@ -1,0 +1,10 @@
+C:\Users\maria\OneDrive - Universidad de Antioquia\Escritorio\UdeA\Teoria de lenguajes y laboratorio\teoriaDeLenguajesLaboratorio9\bin\Debug\teoriaDeLenguajesLaboratorio9.exe.config
+C:\Users\maria\OneDrive - Universidad de Antioquia\Escritorio\UdeA\Teoria de lenguajes y laboratorio\teoriaDeLenguajesLaboratorio9\bin\Debug\teoriaDeLenguajesLaboratorio9.exe
+C:\Users\maria\OneDrive - Universidad de Antioquia\Escritorio\UdeA\Teoria de lenguajes y laboratorio\teoriaDeLenguajesLaboratorio9\bin\Debug\teoriaDeLenguajesLaboratorio9.pdb
+C:\Users\maria\OneDrive - Universidad de Antioquia\Escritorio\UdeA\Teoria de lenguajes y laboratorio\teoriaDeLenguajesLaboratorio9\obj\Debug\teoriaDeLenguajesLaboratorio9.csproj.AssemblyReference.cache
+C:\Users\maria\OneDrive - Universidad de Antioquia\Escritorio\UdeA\Teoria de lenguajes y laboratorio\teoriaDeLenguajesLaboratorio9\obj\Debug\teoriaDeLenguajesLaboratorio9.Form1.resources
+C:\Users\maria\OneDrive - Universidad de Antioquia\Escritorio\UdeA\Teoria de lenguajes y laboratorio\teoriaDeLenguajesLaboratorio9\obj\Debug\teoriaDeLenguajesLaboratorio9.Properties.Resources.resources
+C:\Users\maria\OneDrive - Universidad de Antioquia\Escritorio\UdeA\Teoria de lenguajes y laboratorio\teoriaDeLenguajesLaboratorio9\obj\Debug\teoriaDeLenguajesLaboratorio9.csproj.GenerateResource.cache
+C:\Users\maria\OneDrive - Universidad de Antioquia\Escritorio\UdeA\Teoria de lenguajes y laboratorio\teoriaDeLenguajesLaboratorio9\obj\Debug\teoriaDeLenguajesLaboratorio9.csproj.CoreCompileInputs.cache
+C:\Users\maria\OneDrive - Universidad de Antioquia\Escritorio\UdeA\Teoria de lenguajes y laboratorio\teoriaDeLenguajesLaboratorio9\obj\Debug\teoriaDeLenguajesLaboratorio9.exe
+C:\Users\maria\OneDrive - Universidad de Antioquia\Escritorio\UdeA\Teoria de lenguajes y laboratorio\teoriaDeLenguajesLaboratorio9\obj\Debug\teoriaDeLenguajesLaboratorio9.pdb
