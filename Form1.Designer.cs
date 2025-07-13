@@ -43,7 +43,7 @@ namespace teoriaDeLenguajesLaboratorio9
             this.label1.Size = new System.Drawing.Size(140, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Ingrese la cadena:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            //this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // txtEntrada
             // 

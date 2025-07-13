@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace teoriaDeLenguajesLaboratorio9
@@ -13,190 +12,99 @@ namespace teoriaDeLenguajesLaboratorio9
             InitializeComponent();
         }
 
-        private async void btnAnalizar_Click(object sender, EventArgs e)
+        private void btnAnalizar_Click(object sender, EventArgs e)
         {
-            string input = txtEntrada.Text.Trim();
-            txtResultado.Text = "Analizando...";
-            btnAnalizar.Enabled = false;
+            string entrada = txtEntrada.Text.Trim();
+            var parser = new Parser();
 
-            var resultado = await Task.Run(() =>
-            {
-                List<string> tokens = Tokenizar(input);
-                if (tokens == null)
-                    return "Error léxico: entrada inválida.";
-
-                bool esValida = AnalisisAscendente(tokens);
-                return esValida ? "Cadena válida según la gramática." : "Cadena inválida.";
-            });
-
-            txtResultado.Text = resultado;
-            btnAnalizar.Enabled = true;
+            bool resultado = parser.Analizar(entrada);
+            txtResultado.Text = resultado ? "Cadena válida según la gramática." : "Cadena inválida.";
         }
+    }
 
-        private async void label1_Click(object sender, EventArgs e)
+    public class Parser
+    {
+        private List<string> tokens;
+        private int pos = 0;
+
+        public bool Analizar(string entrada)
         {
-            string input = txtEntrada.Text.Trim();
-            txtResultado.Text = "Analizando...";
-            btnAnalizar.Enabled = false;
+            tokens = Tokenizar(entrada);
+            if (tokens == null) return false;
 
-            var resultado = await Task.Run(() =>
-            {
-                List<string> tokens = Tokenizar(input);
-                if (tokens == null)
-                    return "Error léxico: entrada inválida.";
-
-                bool esValida = AnalisisAscendente(tokens);
-                return esValida ? "Cadena válida según la gramática." : "Cadena inválida.";
-            });
-
-            txtResultado.Text = resultado;
-            btnAnalizar.Enabled = true;
+            pos = 0;
+            return S() && pos == tokens.Count;
         }
 
         private List<string> Tokenizar(string input)
         {
-            List<string> tokens = new List<string>();
-            string patron = @"\s*(var|[0-9]+|[=+\-*/()])\s*";
-            MatchCollection matches = Regex.Matches(input, patron);
+            var resultado = new List<string>();
+            var patron = new Regex(@"\s*(var|[0-9]+|[=+\-*/()])\s*");
+            var matches = patron.Matches(input);
+            int total = 0;
 
-            int longitudTokens = 0;
-            foreach (Match match in matches)
+            foreach (Match m in matches)
             {
-                string token = match.Groups[1].Value;
-                tokens.Add(token);
-                longitudTokens += match.Length;
+                resultado.Add(m.Groups[1].Value);
+                total += m.Length;
             }
 
-            if (longitudTokens != input.Length)
-                return null;
-
-            return tokens;
+            return total == input.Length ? resultado : null;
         }
 
-        private bool AnalisisAscendente(List<string> tokens)
+        private string Actual => pos < tokens.Count ? tokens[pos] : null;
+
+        private bool Coincidir(string esperado)
         {
-            Stack<string> pila = new Stack<string>();
-            int i = 0;
-
-            while (i <= tokens.Count)
+            if (Actual == esperado)
             {
-                string vista = i < tokens.Count ? tokens[i] : "$";
-
-                // Shift
-                if (vista != "$")
-                {
-                    pila.Push(vista);
-                    i++;
-                }
-
-                // Intentamos reducir
-                bool seRedujo = true;
-                int reducciones = 0;
-
-                while (seRedujo && reducciones < 1000)
-                {
-                    seRedujo = false;
-                    reducciones++;
-
-                    // F -> num
-                    if (MatchTop(pila, "num"))
-                    {
-                        ReplaceTop(pila, 1, "F");
-                        seRedujo = true;
-                    }
-                    // F -> ( E )
-                    else if (MatchTop(pila, ")") && MatchSecond(pila, "E") && MatchThird(pila, "("))
-                    {
-                        ReplaceTop(pila, 3, "F");
-                        seRedujo = true;
-                    }
-                    // T -> T * F
-                    else if (MatchTop(pila, "F") && MatchSecond(pila, "*") && MatchThird(pila, "T"))
-                    {
-                        ReplaceTop(pila, 3, "T");
-                        seRedujo = true;
-                    }
-                    // T -> T / F
-                    else if (MatchTop(pila, "F") && MatchSecond(pila, "/") && MatchThird(pila, "T"))
-                    {
-                        ReplaceTop(pila, 3, "T");
-                        seRedujo = true;
-                    }
-                    // T -> F
-                    else if (MatchTop(pila, "F"))
-                    {
-                        ReplaceTop(pila, 1, "T");
-                        seRedujo = true;
-                    }
-                    // E -> E + T
-                    else if (MatchTop(pila, "T") && MatchSecond(pila, "+") && MatchThird(pila, "E"))
-                    {
-                        ReplaceTop(pila, 3, "E");
-                        seRedujo = true;
-                    }
-                    // E -> E - T
-                    else if (MatchTop(pila, "T") && MatchSecond(pila, "-") && MatchThird(pila, "E"))
-                    {
-                        ReplaceTop(pila, 3, "E");
-                        seRedujo = true;
-                    }
-                    // E -> T
-                    else if (MatchTop(pila, "T"))
-                    {
-                        ReplaceTop(pila, 1, "E");
-                        seRedujo = true;
-                    }
-                    // S -> var = E
-                    else if (MatchTop(pila, "E") && MatchSecond(pila, "=") && MatchThird(pila, "var"))
-                    {
-                        ReplaceTop(pila, 3, "S");
-                        seRedujo = true;
-                    }
-                }
-
-                if (reducciones >= 1000)
-                    return false;
-
-                if (pila.Count == 1 && pila.Peek() == "S" && i == tokens.Count)
-                    return true;
-
-                if (i >= tokens.Count && pila.Count > 1)
-                    return false;
+                pos++;
+                return true;
             }
-
             return false;
         }
 
-        // Métodos auxiliares
-
-        private string GetFromTop(Stack<string> pila, int pos)
+        private bool S()
         {
-            if (pila.Count <= pos) return null;
-            return pila.ToArray()[pos];
+            return Coincidir("var") && Coincidir("=") && E();
         }
 
-        private bool MatchTop(Stack<string> pila, string esperado)
+        private bool E()
         {
-            string real = GetFromTop(pila, 0);
-            return esperado == "num" ? int.TryParse(real, out _) : real == esperado;
+            if (!T()) return false;
+            while (Actual == "+" || Actual == "-")
+            {
+                pos++;
+                if (!T()) return false;
+            }
+            return true;
         }
 
-        private bool MatchSecond(Stack<string> pila, string esperado)
+        private bool T()
         {
-            string real = GetFromTop(pila, 1);
-            return esperado == "num" ? int.TryParse(real, out _) : real == esperado;
+            if (!F()) return false;
+            while (Actual == "*" || Actual == "/")
+            {
+                pos++;
+                if (!F()) return false;
+            }
+            return true;
         }
 
-        private bool MatchThird(Stack<string> pila, string esperado)
+        private bool F()
         {
-            string real = GetFromTop(pila, 2);
-            return esperado == "num" ? int.TryParse(real, out _) : real == esperado;
-        }
-
-        private void ReplaceTop(Stack<string> pila, int n, string nuevo)
-        {
-            for (int j = 0; j < n; j++) pila.Pop();
-            pila.Push(nuevo);
+            if (Actual == "(")
+            {
+                pos++;
+                if (!E()) return false;
+                return Coincidir(")");
+            }
+            else if (int.TryParse(Actual, out _))
+            {
+                pos++;
+                return true;
+            }
+            return false;
         }
     }
 }
